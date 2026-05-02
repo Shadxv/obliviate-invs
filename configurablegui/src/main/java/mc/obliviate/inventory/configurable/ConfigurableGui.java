@@ -3,11 +3,10 @@ package mc.obliviate.inventory.configurable;
 import mc.obliviate.inventory.Gui;
 import mc.obliviate.inventory.Icon;
 import mc.obliviate.inventory.configurable.util.GuiSerializer;
-import mc.obliviate.util.placeholder.PlaceholderUtil;
-import net.md_5.bungee.api.ChatColor;
+import mc.obliviate.inventory.configurable.util.PlaceholderUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -170,44 +168,6 @@ public class ConfigurableGui extends Gui {
     public void putDysfunctionalIcons(@Nullable PlaceholderUtil placeholderUtil, @Nonnull List<String> functionalSlots) {
         GuiSerializer.putDysfunctionalIcons(this, this.guiConfigurationTable,
                 this.guiConfigurationTable.getMenusSection(getIconsSectionPath()), placeholderUtil, functionalSlots);
-    }
-
-    /**
-     * Use {@link #addConfigIcon(String)}
-     */
-    @Deprecated
-    public void putIcon(@Nonnull String configName) {
-        addItem(getConfigSlot(configName), getConfigIcon(configName));
-    }
-
-    /**
-     * Use {@link #addConfigIcon(String, PlaceholderUtil)}
-     */
-    @Deprecated
-    public void putIcon(@Nonnull String configName, @Nullable PlaceholderUtil placeholderUtil) {
-        addItem(getConfigSlot(configName), getConfigIcon(configName, placeholderUtil));
-    }
-
-    /**
-     * Use {@link #addConfigIcon(String)} and {@link Icon#onClick(Consumer<InventoryClickEvent>)}<br>
-     * <p>
-     * Deprecated: {@code putIcon("any-icon", e -> {})}<br>
-     * Modern: {@code addConfigIcon("any-icon").onClick({})}
-     */
-    @Deprecated
-    public void putIcon(@Nonnull String configName, @Nonnull Consumer<InventoryClickEvent> click) {
-        addItem(getConfigSlot(configName), getConfigIcon(configName).onClick(click));
-    }
-
-    /**
-     * Use {@link #addConfigIcon(String, PlaceholderUtil)} and {@link Icon#onClick(Consumer<InventoryClickEvent>)}<br>
-     * <p>
-     * Deprecated: {@code putIcon("any-icon", placeholderUtil, e -> {})}<br>
-     * Modern: {@code addConfigIcon("any-icon", placeholderUtil).onClick({})}
-     */
-    @Deprecated
-    public void putIcon(@Nonnull String configName, @Nullable PlaceholderUtil placeholderUtil, @Nonnull Consumer<InventoryClickEvent> click) {
-        addItem(getConfigSlot(configName), getConfigIcon(configName, placeholderUtil).onClick(click));
     }
 
     @Nonnull

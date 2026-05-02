@@ -1,7 +1,7 @@
 package mc.obliviate.inventory.configurable;
 
 import mc.obliviate.inventory.configurable.util.ItemStackSerializer;
-import mc.obliviate.util.placeholder.PlaceholderUtil;
+import mc.obliviate.inventory.configurable.util.PlaceholderUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 

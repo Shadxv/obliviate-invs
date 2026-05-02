@@ -1,7 +1,6 @@
 package mc.obliviate.inventory;
 
-import com.github.Anon8281.universalScheduler.UniversalScheduler;
-import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -37,7 +36,7 @@ public class InventoryAPI {
      * In natural statement, you don't need to implement/call this method.
      */
     public void unload() {
-        InventoryAPI.getScheduler().cancelTasks();
+        Bukkit.getScheduler().cancelTasks(this.plugin);
         HandlerList.unregisterAll(this.listener);
     }
 
@@ -59,10 +58,6 @@ public class InventoryAPI {
         return this.players.values().stream()
                 .filter(gui -> gui.getInventory().equals(inventory))
                 .findFirst().orElse(null);
-    }
-
-    public static TaskScheduler getScheduler() {
-        return UniversalScheduler.getScheduler(InventoryAPI.getInstance().getPlugin());
     }
 
     public static InventoryAPI getInstance() {

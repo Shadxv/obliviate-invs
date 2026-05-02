@@ -1,6 +1,5 @@
 package mc.obliviate.inventory;
 
-import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import com.google.common.base.Preconditions;
 import mc.obliviate.inventory.event.customclosevent.FakeInventoryCloseEvent;
 import mc.obliviate.inventory.util.NMSUtil;
@@ -17,6 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -32,7 +32,7 @@ import java.util.function.Consumer;
 public abstract class Gui implements InventoryHolder {
 
 	private final Map<Integer, GuiIcon> registeredIcons;
-	private final List<MyScheduledTask> taskList = new ArrayList<>();
+	private final List<BukkitTask> taskList = new ArrayList<>();
 	private final String id;
 	private final InventoryType inventoryType;
 	public final Player player;
@@ -267,10 +267,10 @@ public abstract class Gui implements InventoryHolder {
 	 * @param periodInTicks
 	 * @param update
 	 */
-	public void updateTask(@Nonnegative long runDelayInTicks, @Nonnegative long periodInTicks, @Nonnull final Consumer<MyScheduledTask> update) {
+	public void updateTask(@Nonnegative long runDelayInTicks, @Nonnegative long periodInTicks, @Nonnull final Consumer<BukkitTask> update) {
 		Preconditions.checkNotNull(InventoryAPI.getInstance(), "InventoryAPI is not initialized.");
-		final MyScheduledTask[] scheduledTask = new MyScheduledTask[]{null};
-		scheduledTask[0] = InventoryAPI.getScheduler().runTaskTimer(() -> update.accept(scheduledTask[0]), runDelayInTicks, periodInTicks);
+		final BukkitTask[] scheduledTask = new BukkitTask[]{null};
+		scheduledTask[0] = Bukkit.getScheduler().runTaskTimer(InventoryAPI.getInstance().getPlugin(), () -> update.accept(scheduledTask[0]), runDelayInTicks, periodInTicks);
 		taskList.add(scheduledTask[0]);
 	}
 
@@ -281,10 +281,10 @@ public abstract class Gui implements InventoryHolder {
 	 * @param runDelayInTicks
 	 * @param update
 	 */
-	public void runTaskLater(@Nonnegative long runDelayInTicks, @Nonnull final Consumer<MyScheduledTask> update) {
+	public void runTaskLater(@Nonnegative long runDelayInTicks, @Nonnull final Consumer<BukkitTask> update) {
 		Preconditions.checkNotNull(InventoryAPI.getInstance(), "InventoryAPI is not initialized.");
-		final MyScheduledTask[] scheduledTask = new MyScheduledTask[]{null};
-		scheduledTask[0] = InventoryAPI.getScheduler().runTaskLater(() -> update.accept(scheduledTask[0]), runDelayInTicks);
+		final BukkitTask[] scheduledTask = new BukkitTask[]{null};
+		scheduledTask[0] = Bukkit.getScheduler().runTaskLater(InventoryAPI.getInstance().getPlugin(), () -> update.accept(scheduledTask[0]), runDelayInTicks);
 		taskList.add(scheduledTask[0]);
 	}
 
@@ -385,12 +385,12 @@ public abstract class Gui implements InventoryHolder {
 	 * Gets tasks of the gui. Which can be
 	 * created by {@link Gui#updateTask(long, long, Consumer)} or {@link Gui#runTaskLater(long, Consumer)}.
 	 * <p>
-	 * To remove a task, use {@link Gui#stopTask(MyScheduledTask)}.
+	 * To remove a task, use {@link Gui#stopTask(BukkitTask)}.
 	 * or {@link Gui#stopAllTasks()} to remove all tasks.
 	 * </p>
 	 * @return Unmodifiable list of tasks.
 	 */
-	public List<MyScheduledTask> getTaskList() {
+	public List<BukkitTask> getTaskList() {
 		return Collections.unmodifiableList(taskList);
 	}
 
@@ -400,7 +400,7 @@ public abstract class Gui implements InventoryHolder {
 	 *
 	 * @param task Task to stop.
 	 */
-	public void stopTask(@Nonnull MyScheduledTask task) {
+	public void stopTask(@Nonnull BukkitTask task) {
 		Preconditions.checkNotNull(task, "task cannot be null");
 		task.cancel();
 		taskList.remove(task);
@@ -411,7 +411,7 @@ public abstract class Gui implements InventoryHolder {
 	 * created by {@link Gui#updateTask(long, long, Consumer)} or {@link Gui#runTaskLater(long, Consumer)}.
 	 */
 	public void stopAllTasks() {
-		taskList.forEach(MyScheduledTask::cancel);
+		taskList.forEach(BukkitTask::cancel);
 		taskList.clear();
 	}
 

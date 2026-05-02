@@ -28,9 +28,9 @@ public class AdvancedSlot {
         this.slot = slot;
         this.advancedSlotManager = advancedSlotManager;
         this.displayIcon = displayIcon.onClick(e -> {
-            if (!AdvancedSlotManager.isNullOrAir(e.getCursor())) {
-                if (this.prePutClickAction.test(e, e.getCursor())) return;
-                final ItemStack cursor = e.getCursor();
+            if (!AdvancedSlotManager.isNullOrAir(e.getView().getCursor())) {
+                if (this.prePutClickAction.test(e, e.getView().getCursor())) return;
+                final ItemStack cursor = e.getView().getCursor();
                 ItemStack newCursor = null;
                 if (e.isRightClick()) {
                     if (cursor.getAmount() > 1) {
@@ -39,9 +39,9 @@ public class AdvancedSlot {
                     }
                     cursor.setAmount(1);
                 }
-                e.setCursor(newCursor);
+                e.getView().setCursor(newCursor);
                 this.advancedSlotManager.putIconToAdvancedSlot(this, cursor, e);
-            } else if (e.getAction().equals(InventoryAction.HOTBAR_MOVE_AND_READD)) {
+            } else if (e.getAction().equals(InventoryAction.HOTBAR_SWAP)) {
                 ItemStack hotbarItem = Objects.requireNonNull(AdvancedSlotManager.getItemStackFromHotkeyClick(e));
                 if (this.prePutClickAction.test(e, hotbarItem)) return;
                 this.advancedSlotManager.putIconToAdvancedSlot(this, hotbarItem, e);

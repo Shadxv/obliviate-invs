@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -41,28 +42,13 @@ public class Icon implements GuiIcon {
 		return ComponentIcon.fromIcon(this);
 	}
 
-	/**
-	 * sets durability of icon
-	 *
-	 * @param newDamage durability
-	 * @return this
-	 */
-	@SuppressWarnings("deprecation")
-	@Nonnull
-	public Icon setDurability(final short newDamage) {
-		item.setDurability(newDamage);
-		return this;
-	}
-
-	/**
-	 * sets durability of the icon
-	 *
-	 * @param newDamage durability
-	 * @return this
-	 */
 	@Nonnull
 	public Icon setDurability(final int newDamage) {
-		setDurability((short) newDamage);
+		final ItemMeta meta = item.getItemMeta();
+		if (meta instanceof Damageable damageable) {
+			damageable.setDamage(newDamage);
+			item.setItemMeta(meta);
+		}
 		return this;
 	}
 
